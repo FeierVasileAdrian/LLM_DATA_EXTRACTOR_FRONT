@@ -104,10 +104,18 @@ if len(url_input)>0:
         }
 
         res = requests.post(url=url_post, json=data)
-        res_json = res.json()
-        res_body = res_json.get("extracted_data")
-        if res_body is not None:
 
-            for keyword, description in res_body.items():
-                st.write(f"Found info about {keyword}:")
-                st.write(description)
+        if res.status_code == 200:
+
+            res_json = res.json()
+            res_body = res_json.get("extracted_data")
+
+            if res_body is not None:
+
+                for keyword, description in res_body.items():
+                    st.write(f"Found info about {keyword}:")
+                    st.write(description)
+
+        else:
+            st.markdown("<h3 style='text-align: center; color: #E73D53;'>Oops, something went wrong 😓 Please try again.</h3>", unsafe_allow_html=True)
+            print(res.status_code, res.content)
